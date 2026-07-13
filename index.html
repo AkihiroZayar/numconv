@@ -5,774 +5,413 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NumConv — Number System Converter</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       :root {
-        --bg: #050a0e;
-        --bg2: #0a1520;
-        --bg3: #0f1e2e;
-        --accent: #00d4ff;
-        --accent2: #00ff9d;
-        --accent3: #ff6b35;
-        --text: #c8e6f5;
-        --text-dim: #4a7a9b;
-        --text-bright: #ffffff;
-        --border: #1a3a52;
-        --border-accent: #00d4ff44;
-        --mono: "Share Tech Mono", monospace;
-        --display: "Orbitron", monospace;
-        --body: "Inter", sans-serif;
-        --glow: 0 0 20px #00d4ff33;
-        --glow-strong: 0 0 40px #00d4ff66;
+        --bg: #f5f5f7;
+        --surface: #ffffff;
+        --surface2: #f0f0f3;
+        --primary: #4f46e5;
+        --primary-light: #e8e7fb;
+        --green: #16a34a;
+        --green-light: #dcfce7;
+        --red: #dc2626;
+        --red-light: #fee2e2;
+        --orange: #ea580c;
+        --text: #1e1e2e;
+        --text2: #6b7280;
+        --text3: #9ca3af;
+        --border: #e5e7eb;
+        --radius: 12px;
+        --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+        --mono: 'DM Mono', monospace;
+        --display: 'Space Grotesk', sans-serif;
+        --body: 'DM Sans', sans-serif;
       }
 
-      html {
-        scroll-behavior: smooth;
-      }
-
+      html { scroll-behavior: smooth; }
       body {
         background: var(--bg);
         color: var(--text);
         font-family: var(--body);
         min-height: 100vh;
-        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
       }
 
-      /* Animated grid background */
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image:
-          linear-gradient(var(--border) 1px, transparent 1px),
-          linear-gradient(90deg, var(--border) 1px, transparent 1px);
-        background-size: 40px 40px;
-        opacity: 0.3;
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      body::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background: radial-gradient(
-          ellipse at 50% 0%,
-          #00d4ff11 0%,
-          transparent 60%
-        );
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      .container {
-        position: relative;
-        z-index: 1;
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 0 24px;
-      }
+      .container { max-width: 880px; margin: 0 auto; padding: 0 20px; }
 
       /* ── NAV ── */
       nav {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: #050a0ecc;
-        backdrop-filter: blur(12px);
+        position: sticky; top: 0; z-index: 100;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(14px);
         border-bottom: 1px solid var(--border);
-        padding: 0 24px;
+        padding: 0 20px;
       }
       .nav-inner {
-        max-width: 960px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        max-width: 880px; margin: 0 auto;
+        display: flex; align-items: center; justify-content: space-between;
         height: 56px;
       }
       .logo {
         font-family: var(--display);
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--accent);
-        text-shadow: var(--glow);
-        letter-spacing: 2px;
+        font-size: 20px; font-weight: 700;
+        color: var(--text);
       }
-      .logo span {
-        color: var(--accent2);
+      .logo span { color: var(--primary); }
+      .logo .logo-lab {
+        font-family: var(--body); font-size: 11px; font-weight: 500;
+        color: var(--text3); letter-spacing: 0; margin-left: 6px;
       }
-      .nav-tabs {
-        display: flex;
-        gap: 4px;
-      }
+      .nav-tabs { display: flex; gap: 2px; }
       .nav-tab {
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--text-dim);
-        padding: 6px 14px;
-        border-radius: 4px;
-        cursor: pointer;
-        border: 1px solid transparent;
-        transition: all 0.2s;
-        background: transparent;
+        font-family: var(--body);
+        font-size: 13px; font-weight: 500;
+        color: var(--text2);
+        padding: 6px 14px; border-radius: 8px;
+        cursor: pointer; border: none;
+        background: transparent; transition: all 0.15s;
       }
-      .nav-tab:hover {
-        color: var(--accent);
-        border-color: var(--border-accent);
-      }
-      .nav-tab.active {
-        color: var(--accent);
-        border-color: var(--accent);
-        background: #00d4ff11;
-      }
+      .nav-tab:hover { color: var(--text); background: var(--surface2); }
+      .nav-tab.active { color: var(--primary); background: var(--primary-light); }
 
       /* ── HERO ── */
-      .hero {
-        padding: 60px 0 40px;
-        text-align: center;
-      }
+      .hero { padding: 48px 0 32px; text-align: center; }
       .hero-label {
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--accent2);
-        letter-spacing: 4px;
-        margin-bottom: 16px;
-        opacity: 0;
-        animation: fadeUp 0.6s 0.1s forwards;
+        font-size: 13px; font-weight: 600;
+        color: var(--primary);
+        letter-spacing: 1px;
+        margin-bottom: 10px; text-transform: uppercase;
       }
       .hero-title {
         font-family: var(--display);
-        font-size: clamp(32px, 6vw, 56px);
-        font-weight: 900;
-        color: var(--text-bright);
-        line-height: 1.1;
-        margin-bottom: 16px;
-        opacity: 0;
-        animation: fadeUp 0.6s 0.2s forwards;
+        font-size: clamp(26px, 5vw, 40px);
+        font-weight: 700; color: var(--text);
+        line-height: 1.2; margin-bottom: 10px;
       }
-      .hero-title .hl {
-        color: var(--accent);
-        text-shadow: var(--glow);
-      }
-      .hero-sub {
-        font-size: 15px;
-        color: var(--text-dim);
-        opacity: 0;
-        animation: fadeUp 0.6s 0.3s forwards;
-      }
-
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(16px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+      .hero-sub { font-size: 15px; color: var(--text2); }
 
       /* ── PAGES ── */
-      .page {
-        display: none;
-      }
-      .page.active {
-        display: block;
-      }
+      .page { display: none; }
+      .page.active { display: block; }
 
-      /* ── CONVERTER SECTION ── */
+      /* ── CONVERTER GRID ── */
       .converter-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-bottom: 24px;
-        opacity: 0;
-        animation: fadeUp 0.6s 0.4s forwards;
+        gap: 14px; margin-bottom: 20px;
       }
       @media (max-width: 600px) {
-        .converter-grid {
-          grid-template-columns: 1fr;
-        }
+        .converter-grid { grid-template-columns: 1fr; }
+        .nav-tabs { gap: 0; }
+        .nav-tab { padding: 6px 10px; font-size: 12px; }
       }
 
       .base-card {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 20px;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s;
-        cursor: text;
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        box-shadow: var(--shadow);
       }
-      .base-card:hover {
-        border-color: var(--border-accent);
-      }
-      .base-card.active {
-        border-color: var(--accent);
-        box-shadow: var(--glow);
-      }
+      .base-card:hover { border-color: #d0d0d6; }
+      .base-card.active { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
       .base-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
+        display: flex; justify-content: space-between;
+        align-items: center; margin-bottom: 10px;
       }
       .base-name {
         font-family: var(--display);
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--accent);
-        letter-spacing: 2px;
+        font-size: 12px; font-weight: 600;
+        color: var(--text); letter-spacing: 0.5px;
+        text-transform: uppercase;
       }
       .base-badge {
-        font-family: var(--mono);
-        font-size: 10px;
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        padding: 2px 8px;
-        color: var(--text-dim);
+        font-family: var(--mono); font-size: 11px;
+        background: var(--surface2);
+        border-radius: 6px; padding: 2px 8px;
+        color: var(--text2);
       }
       .base-input {
-        width: 100%;
-        background: transparent;
-        border: none;
-        outline: none;
+        width: 100%; background: transparent;
+        border: none; outline: none;
         font-family: var(--mono);
-        font-size: 22px;
-        font-weight: 400;
-        color: var(--text-bright);
-        caret-color: var(--accent);
+        font-size: 22px; font-weight: 500;
+        color: var(--text);
+        caret-color: var(--primary);
       }
-      .base-input::placeholder {
-        color: var(--text-dim);
-        font-size: 18px;
-      }
+      .base-input::placeholder { color: var(--text3); font-size: 17px; }
       .base-error {
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--accent3);
-        margin-top: 6px;
-        min-height: 16px;
+        font-family: var(--mono); font-size: 11px;
+        color: var(--red); margin-top: 6px; min-height: 16px;
       }
       .base-copy {
-        font-family: var(--mono);
-        font-size: 10px;
-        color: var(--text-dim);
-        margin-top: 8px;
-        cursor: pointer;
-        transition: color 0.2s;
-        background: none;
-        border: none;
-        padding: 0;
+        font-size: 12px; font-weight: 500;
+        color: var(--text3); margin-top: 8px;
+        cursor: pointer; background: none;
+        border: none; padding: 0; transition: color 0.15s;
       }
-      .base-copy:hover {
-        color: var(--accent2);
-      }
+      .base-copy:hover { color: var(--primary); }
 
       /* ── ACTION BUTTONS ── */
       .actions {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 28px;
-        flex-wrap: wrap;
-        opacity: 0;
-        animation: fadeUp 0.6s 0.5s forwards;
+        display: flex; gap: 8px;
+        margin-bottom: 24px; flex-wrap: wrap;
       }
       .btn {
-        font-family: var(--mono);
-        font-size: 12px;
-        padding: 9px 18px;
-        border-radius: 6px;
+        font-family: var(--body);
+        font-size: 13px; font-weight: 500;
+        padding: 8px 16px; border-radius: 8px;
         border: 1px solid var(--border);
-        background: var(--bg2);
-        color: var(--text-dim);
-        cursor: pointer;
-        transition: all 0.2s;
-        letter-spacing: 1px;
+        background: var(--surface);
+        color: var(--text2); cursor: pointer;
+        transition: all 0.15s; box-shadow: var(--shadow);
       }
-      .btn:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-        background: #00d4ff0a;
-      }
+      .btn:hover { border-color: #c5c7cc; color: var(--text); }
       .btn.primary {
-        border-color: var(--accent);
-        color: var(--accent);
-        background: #00d4ff11;
+        border-color: var(--primary);
+        color: #fff; background: var(--primary);
       }
-      .btn.primary:hover {
-        background: #00d4ff22;
-        box-shadow: var(--glow);
-      }
+      .btn.primary:hover { background: #4338ca; }
 
-      /* ── BIT VISUALIZER ── */
+      /* ── PANELS ── */
       .panel {
-        background: var(--bg2);
+        background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-        opacity: 0;
-        animation: fadeUp 0.6s 0.55s forwards;
+        border-radius: var(--radius);
+        padding: 20px; margin-bottom: 16px;
+        box-shadow: var(--shadow);
       }
       .panel-title {
         font-family: var(--display);
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--text-dim);
-        letter-spacing: 2px;
-        margin-bottom: 16px;
+        font-size: 12px; font-weight: 600;
+        color: var(--text2); letter-spacing: 0.5px;
+        margin-bottom: 14px; text-transform: uppercase;
       }
 
-      .bits-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .bit-group {
-        display: flex;
-        gap: 4px;
-      }
-      .bit-cell {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-      }
+      /* ── BIT VISUALIZER ── */
+      .bits-row { display: flex; flex-wrap: wrap; gap: 8px; }
+      .bit-group { display: flex; gap: 3px; }
+      .bit-cell { display: flex; flex-direction: column; align-items: center; gap: 3px; }
       .bit-box {
-        width: 34px;
-        height: 34px;
-        border-radius: 6px;
+        width: 34px; height: 34px; border-radius: 8px;
         border: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--mono);
-        font-size: 16px;
-        font-weight: 400;
-        transition: all 0.2s;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--mono); font-size: 15px; font-weight: 500;
+        transition: all 0.15s;
       }
       .bit-box.one {
-        background: #00d4ff18;
-        border-color: var(--accent);
-        color: var(--accent);
-        box-shadow: 0 0 10px #00d4ff33;
+        background: var(--primary-light);
+        border-color: var(--primary);
+        color: var(--primary);
       }
-      .bit-box.zero {
-        background: var(--bg3);
-        color: var(--text-dim);
-      }
-      .bit-pos {
-        font-family: var(--mono);
-        font-size: 9px;
-        color: var(--text-dim);
-      }
+      .bit-box.zero { background: var(--surface2); color: var(--text3); }
+      .bit-pos { font-family: var(--mono); font-size: 9px; color: var(--text3); }
 
       /* ── REFERENCE TABLE ── */
-      .ref-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: var(--mono);
-        font-size: 13px;
-      }
+      .ref-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
       .ref-table th {
-        font-family: var(--display);
-        font-size: 10px;
-        letter-spacing: 2px;
-        color: var(--text-dim);
-        text-align: left;
-        padding: 10px 14px;
-        border-bottom: 1px solid var(--border);
+        font-family: var(--display); font-size: 11px; font-weight: 600;
+        color: var(--text2); text-align: left;
+        padding: 10px 14px; border-bottom: 1.5px solid var(--border);
+        text-transform: uppercase; letter-spacing: 0.5px;
       }
       .ref-table td {
-        padding: 8px 14px;
-        border-bottom: 1px solid #0f1e2e;
-        color: var(--text);
+        padding: 7px 14px; border-bottom: 1px solid var(--surface2); color: var(--text);
       }
-      .ref-table tr:hover td {
-        background: var(--bg3);
-      }
-      .ref-table tr.hl td {
-        background: #00d4ff14;
-        color: var(--accent);
-      }
-      .ref-table td:first-child {
-        color: var(--text-bright);
-      }
+      .ref-table tr:hover td { background: var(--surface2); }
+      .ref-table tr.hl td { background: var(--primary-light); color: var(--primary); }
+      .ref-table td:first-child { font-weight: 500; }
 
       /* ── ASCII TABLE ── */
       .ascii-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
         gap: 6px;
       }
       .ascii-cell {
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 8px;
-        cursor: pointer;
-        transition: all 0.15s;
+        background: var(--surface2); border: 1px solid var(--border);
+        border-radius: 8px; padding: 8px;
+        cursor: pointer; transition: all 0.12s;
       }
-      .ascii-cell:hover {
-        border-color: var(--accent);
-        background: #00d4ff08;
-      }
-      .ascii-cell.hl {
-        border-color: var(--accent2);
-        background: #00ff9d11;
-      }
-      .ascii-char {
-        font-family: var(--display);
-        font-size: 16px;
-        color: var(--text-bright);
-      }
-      .ascii-vals {
-        font-family: var(--mono);
-        font-size: 9px;
-        color: var(--text-dim);
-        margin-top: 4px;
-        line-height: 1.5;
-      }
+      .ascii-cell:hover { border-color: var(--primary); background: var(--primary-light); }
+      .ascii-cell.hl { border-color: var(--green); background: var(--green-light); }
+      .ascii-char { font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--text); }
+      .ascii-vals { font-family: var(--mono); font-size: 9px; color: var(--text3); margin-top: 4px; line-height: 1.5; }
 
-      /* ── QUIZ PAGE ── */
+      /* ── QUIZ ── */
       .quiz-card {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 32px;
-        text-align: center;
-        max-width: 560px;
-        margin: 0 auto;
-        opacity: 0;
-        animation: fadeUp 0.5s 0.1s forwards;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 16px; padding: 32px; text-align: center;
+        max-width: 540px; margin: 0 auto; box-shadow: var(--shadow-md);
       }
-      .quiz-question {
-        font-family: var(--mono);
-        font-size: 14px;
-        color: var(--text-dim);
-        margin-bottom: 12px;
-        letter-spacing: 1px;
-      }
+      .quiz-question { font-size: 14px; color: var(--text2); margin-bottom: 10px; font-weight: 500; }
       .quiz-number {
         font-family: var(--display);
-        font-size: 42px;
-        font-weight: 900;
-        color: var(--text-bright);
-        margin-bottom: 8px;
-        text-shadow: var(--glow);
+        font-size: 40px; font-weight: 700;
+        color: var(--text); margin-bottom: 6px;
       }
       .quiz-hint {
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--accent);
-        margin-bottom: 28px;
-        letter-spacing: 1px;
+        font-family: var(--mono); font-size: 12px;
+        color: var(--primary); margin-bottom: 24px;
       }
-      .quiz-options {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-bottom: 20px;
-      }
+      .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
       .quiz-opt {
-        font-family: var(--mono);
-        font-size: 15px;
-        padding: 14px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        background: var(--bg3);
-        color: var(--text);
-        cursor: pointer;
-        transition: all 0.2s;
+        font-family: var(--mono); font-size: 15px; font-weight: 500;
+        padding: 14px; border-radius: 10px;
+        border: 1.5px solid var(--border);
+        background: var(--surface); color: var(--text);
+        cursor: pointer; transition: all 0.15s;
       }
-      .quiz-opt:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-      .quiz-opt.correct {
-        border-color: var(--accent2);
-        background: #00ff9d18;
-        color: var(--accent2);
-      }
-      .quiz-opt.wrong {
-        border-color: var(--accent3);
-        background: #ff6b3518;
-        color: var(--accent3);
-      }
-      .quiz-feedback {
-        font-family: var(--mono);
-        font-size: 13px;
-        min-height: 20px;
-        margin-bottom: 16px;
-      }
-      .quiz-score {
-        display: flex;
-        justify-content: center;
-        gap: 32px;
-        margin-bottom: 20px;
-      }
-      .score-item {
-        text-align: center;
-      }
-      .score-val {
-        font-family: var(--display);
-        font-size: 28px;
-        font-weight: 700;
-      }
-      .score-val.green {
-        color: var(--accent2);
-      }
-      .score-val.red {
-        color: var(--accent3);
-      }
-      .score-label {
-        font-family: var(--mono);
-        font-size: 10px;
-        color: var(--text-dim);
-        letter-spacing: 1px;
-      }
+      .quiz-opt:hover { border-color: var(--primary); color: var(--primary); }
+      .quiz-opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+      .quiz-opt.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+      .quiz-feedback { font-family: var(--mono); font-size: 13px; min-height: 20px; margin-bottom: 14px; }
+      .quiz-score { display: flex; justify-content: center; gap: 32px; margin-bottom: 20px; }
+      .score-item { text-align: center; }
+      .score-val { font-family: var(--display); font-size: 28px; font-weight: 700; }
+      .score-val.green { color: var(--green); }
+      .score-val.red { color: var(--red); }
+      .score-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
 
       /* ── HISTORY ── */
-      .history-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
+      .history-list { display: flex; flex-direction: column; gap: 6px; }
       .history-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 10px 14px;
-        font-family: var(--mono);
-        font-size: 12px;
-        cursor: pointer;
+        display: flex; align-items: center; gap: 12px;
+        background: var(--surface2); border: 1px solid var(--border);
+        border-radius: 8px; padding: 10px 14px;
+        font-family: var(--mono); font-size: 12px;
+        cursor: pointer; transition: border-color 0.12s;
+      }
+      .history-row:hover { border-color: var(--primary); }
+      .history-dec { color: var(--text); font-weight: 500; min-width: 50px; }
+      .history-rest { color: var(--text2); flex: 1; }
+      .history-time { color: var(--text3); font-size: 10px; }
+
+      /* ── SEARCH INPUT ── */
+      .search-input {
+        background: var(--surface2); border: 1px solid var(--border);
+        border-radius: 8px; padding: 8px 12px;
+        font-family: var(--mono); font-size: 12px;
+        color: var(--text); outline: none; width: 200px;
         transition: border-color 0.15s;
       }
-      .history-row:hover {
-        border-color: var(--accent);
-      }
-      .history-dec {
-        color: var(--text-bright);
-        min-width: 50px;
-      }
-      .history-rest {
-        color: var(--text-dim);
-        flex: 1;
-      }
-      .history-time {
-        color: var(--text-dim);
-        font-size: 10px;
-      }
+      .search-input:focus { border-color: var(--primary); }
 
       /* ── FOOTER ── */
       footer {
-        text-align: center;
-        padding: 40px 24px;
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--text-dim);
-        letter-spacing: 1px;
+        text-align: center; padding: 40px 20px;
+        font-size: 13px; color: var(--text3);
       }
+      footer span { color: var(--primary); font-weight: 500; }
     </style>
   </head>
   <body>
     <nav>
       <div class="nav-inner">
-        <div class="logo">NUM<span>CONV</span></div>
+        <div class="logo">Num<span>Conv</span> <span class="logo-lab">by AkihiroLabs</span></div>
         <div class="nav-tabs">
-          <button class="nav-tab active" onclick="showPage('converter')">
-            CONVERTER
-          </button>
-          <button class="nav-tab" onclick="showPage('reference')">
-            REFERENCE
-          </button>
+          <button class="nav-tab active" onclick="showPage('converter')">Converter</button>
+          <button class="nav-tab" onclick="showPage('reference')">Reference</button>
           <button class="nav-tab" onclick="showPage('ascii')">ASCII</button>
-          <button class="nav-tab" onclick="showPage('quiz')">QUIZ</button>
-          <button class="nav-tab" onclick="showPage('history')">HISTORY</button>
+          <button class="nav-tab" onclick="showPage('quiz')">Quiz</button>
+          <button class="nav-tab" onclick="showPage('history')">History</button>
         </div>
       </div>
     </nav>
 
-    <!-- ═══════════ CONVERTER PAGE ═══════════ -->
+    <!-- CONVERTER PAGE -->
     <div id="page-converter" class="page active">
       <div class="container">
         <div class="hero">
-          <div class="hero-label">// NUMBER SYSTEM CONVERTER</div>
-          <h1 class="hero-title">
-            CONVERT ACROSS<br /><span class="hl">ALL BASES</span>
-          </h1>
-          <p class="hero-sub">
-            Type in any field — all others update instantly
-          </p>
+          <div class="hero-label">Number System Converter</div>
+          <h1 class="hero-title">Convert across all bases</h1>
+          <p class="hero-sub">Type in any field — all others update instantly</p>
         </div>
 
         <div class="converter-grid">
           <div class="base-card" id="card-dec">
             <div class="base-header">
-              <span class="base-name">DECIMAL</span>
-              <span class="base-badge">BASE 10</span>
+              <span class="base-name">Decimal</span>
+              <span class="base-badge">Base 10</span>
             </div>
-            <input
-              class="base-input"
-              id="inp-dec"
-              placeholder="0–9..."
-              inputmode="numeric"
-              autocomplete="off"
-            />
+            <input class="base-input" id="inp-dec" placeholder="0–9..." inputmode="numeric" autocomplete="off" />
             <div class="base-error" id="err-dec"></div>
-            <button class="base-copy" onclick="copyVal('dec')">[ COPY ]</button>
+            <button class="base-copy" onclick="copyVal('dec')">Copy</button>
           </div>
           <div class="base-card" id="card-bin">
             <div class="base-header">
-              <span class="base-name">BINARY</span>
-              <span class="base-badge">BASE 2</span>
+              <span class="base-name">Binary</span>
+              <span class="base-badge">Base 2</span>
             </div>
-            <input
-              class="base-input"
-              id="inp-bin"
-              placeholder="0 or 1..."
-              autocomplete="off"
-            />
+            <input class="base-input" id="inp-bin" placeholder="0 or 1..." autocomplete="off" />
             <div class="base-error" id="err-bin"></div>
-            <button class="base-copy" onclick="copyVal('bin')">[ COPY ]</button>
+            <button class="base-copy" onclick="copyVal('bin')">Copy</button>
           </div>
           <div class="base-card" id="card-hex">
             <div class="base-header">
-              <span class="base-name">HEXADECIMAL</span>
-              <span class="base-badge">BASE 16</span>
+              <span class="base-name">Hexadecimal</span>
+              <span class="base-badge">Base 16</span>
             </div>
-            <input
-              class="base-input"
-              id="inp-hex"
-              placeholder="0–9, A–F..."
-              autocomplete="off"
-            />
+            <input class="base-input" id="inp-hex" placeholder="0–9, A–F..." autocomplete="off" />
             <div class="base-error" id="err-hex"></div>
-            <button class="base-copy" onclick="copyVal('hex')">[ COPY ]</button>
+            <button class="base-copy" onclick="copyVal('hex')">Copy</button>
           </div>
           <div class="base-card" id="card-oct">
             <div class="base-header">
-              <span class="base-name">OCTAL</span>
-              <span class="base-badge">BASE 8</span>
+              <span class="base-name">Octal</span>
+              <span class="base-badge">Base 8</span>
             </div>
-            <input
-              class="base-input"
-              id="inp-oct"
-              placeholder="0–7..."
-              autocomplete="off"
-            />
+            <input class="base-input" id="inp-oct" placeholder="0–7..." autocomplete="off" />
             <div class="base-error" id="err-oct"></div>
-            <button class="base-copy" onclick="copyVal('oct')">[ COPY ]</button>
+            <button class="base-copy" onclick="copyVal('oct')">Copy</button>
           </div>
         </div>
 
         <div class="actions">
-          <button class="btn primary" onclick="clearAll()">⌫ CLEAR</button>
-          <button class="btn" onclick="randomNum()">⟳ RANDOM</button>
-          <button class="btn" onclick="copyAll()">⎘ COPY ALL</button>
-          <button class="btn" onclick="loadExample(255)">EX: 255</button>
-          <button class="btn" onclick="loadExample(42)">EX: 42</button>
-          <button class="btn" onclick="loadExample(1024)">EX: 1024</button>
+          <button class="btn primary" onclick="clearAll()">Clear</button>
+          <button class="btn" onclick="randomNum()">Random</button>
+          <button class="btn" onclick="copyAll()">Copy all</button>
+          <button class="btn" onclick="loadExample(255)">255</button>
+          <button class="btn" onclick="loadExample(42)">42</button>
+          <button class="btn" onclick="loadExample(1024)">1024</button>
         </div>
 
         <div class="panel" id="bit-panel">
-          <div class="panel-title">// BIT VISUALIZER</div>
+          <div class="panel-title">Bit Visualizer</div>
           <div class="bits-row" id="bit-grid">
-            <span
-              style="
-                color: var(--text-dim);
-                font-family: var(--mono);
-                font-size: 13px;
-              "
-              >enter a number above to see its bits...</span
-            >
+            <span style="color:var(--text3);font-family:var(--mono);font-size:13px;">Enter a number above to see its bits</span>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panel-title">// STEP-BY-STEP BREAKDOWN</div>
-          <div
-            id="steps-content"
-            style="
-              font-family: var(--mono);
-              font-size: 12px;
-              color: var(--text-dim);
-              line-height: 2;
-            "
-          >
-            enter a number to see the conversion steps...
+          <div class="panel-title">Step-by-step Breakdown</div>
+          <div id="steps-content" style="font-family:var(--mono);font-size:12px;color:var(--text2);line-height:2;">
+            Enter a number to see the conversion steps
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════ REFERENCE PAGE ═══════════ -->
+    <!-- REFERENCE PAGE -->
     <div id="page-reference" class="page">
-      <div class="container" style="padding-top: 40px">
-        <div class="panel" style="opacity: 1; animation: none">
-          <div class="panel-title">// REFERENCE TABLE (0–255)</div>
-          <div
-            style="
-              margin-bottom: 12px;
-              display: flex;
-              gap: 8px;
-              align-items: center;
-            "
-          >
-            <input
-              id="ref-search"
-              style="
-                background: var(--bg3);
-                border: 1px solid var(--border);
-                border-radius: 6px;
-                padding: 8px 12px;
-                font-family: var(--mono);
-                font-size: 12px;
-                color: var(--text);
-                outline: none;
-                width: 200px;
-              "
-              placeholder="search decimal..."
-              oninput="filterRef()"
-            />
-            <span
-              style="
-                font-family: var(--mono);
-                font-size: 11px;
-                color: var(--text-dim);
-              "
-              id="ref-count"
-            ></span>
+      <div class="container" style="padding-top:32px;">
+        <div class="panel">
+          <div class="panel-title">Reference Table (0–255)</div>
+          <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;">
+            <input id="ref-search" class="search-input" placeholder="Search..." oninput="filterRef()" />
+            <span style="font-size:12px;color:var(--text3);" id="ref-count"></span>
           </div>
-          <div style="max-height: 500px; overflow-y: auto">
+          <div style="max-height:500px;overflow-y:auto;">
             <table class="ref-table">
-              <thead>
-                <tr>
-                  <th>DEC</th>
-                  <th>BIN</th>
-                  <th>OCT</th>
-                  <th>HEX</th>
-                  <th>+2 POWER?</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Dec</th><th>Bin</th><th>Oct</th><th>Hex</th><th>Power of 2?</th></tr></thead>
               <tbody id="ref-tbody"></tbody>
             </table>
           </div>
@@ -780,575 +419,309 @@
       </div>
     </div>
 
-    <!-- ═══════════ ASCII PAGE ═══════════ -->
+    <!-- ASCII PAGE -->
     <div id="page-ascii" class="page">
-      <div class="container" style="padding-top: 40px">
-        <div class="panel" style="opacity: 1; animation: none">
-          <div class="panel-title">// ASCII TABLE</div>
-          <p
-            style="
-              font-family: var(--mono);
-              font-size: 12px;
-              color: var(--text-dim);
-              margin-bottom: 16px;
-            "
-          >
-            click any character to load it in the converter
-          </p>
+      <div class="container" style="padding-top:32px;">
+        <div class="panel">
+          <div class="panel-title">ASCII Table</div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Click any character to load it in the converter</p>
           <div class="ascii-grid" id="ascii-grid"></div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════ QUIZ PAGE ═══════════ -->
+    <!-- QUIZ PAGE -->
     <div id="page-quiz" class="page">
-      <div class="container" style="padding-top: 40px">
+      <div class="container" style="padding-top:32px;">
         <div class="quiz-card" id="quiz-card">
           <div class="quiz-score">
             <div class="score-item">
               <div class="score-val green" id="q-correct">0</div>
-              <div class="score-label">CORRECT</div>
+              <div class="score-label">Correct</div>
             </div>
             <div class="score-item">
-              <div class="score-val" id="q-streak" style="color: var(--accent)">
-                0
-              </div>
-              <div class="score-label">STREAK</div>
+              <div class="score-val" id="q-streak" style="color:var(--primary);">0</div>
+              <div class="score-label">Streak</div>
             </div>
             <div class="score-item">
               <div class="score-val red" id="q-wrong">0</div>
-              <div class="score-label">WRONG</div>
+              <div class="score-label">Wrong</div>
             </div>
           </div>
-          <div class="quiz-question" id="q-question">LOADING...</div>
+          <div class="quiz-question" id="q-question">Loading...</div>
           <div class="quiz-number" id="q-number">—</div>
           <div class="quiz-hint" id="q-hint"></div>
           <div class="quiz-options" id="q-options"></div>
           <div class="quiz-feedback" id="q-feedback"></div>
-          <button
-            class="btn primary"
-            onclick="nextQuiz()"
-            id="q-next"
-            style="display: none; margin: 0 auto"
-          >
-            NEXT QUESTION →
-          </button>
-          <button
-            class="btn"
-            onclick="newQuiz()"
-            style="margin: 12px auto 0; display: block"
-          >
-            NEW QUIZ
-          </button>
+          <button class="btn primary" onclick="nextQuiz()" id="q-next" style="display:none;margin:0 auto;">Next →</button>
+          <button class="btn" onclick="newQuiz()" style="margin:12px auto 0;display:block;">New Quiz</button>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════ HISTORY PAGE ═══════════ -->
+    <!-- HISTORY PAGE -->
     <div id="page-history" class="page">
-      <div class="container" style="padding-top: 40px">
-        <div class="panel" style="opacity: 1; animation: none">
-          <div class="panel-title">// CONVERSION HISTORY</div>
+      <div class="container" style="padding-top:32px;">
+        <div class="panel">
+          <div class="panel-title">Conversion History</div>
           <div id="hist-list" class="history-list">
-            <p
-              style="
-                font-family: var(--mono);
-                font-size: 12px;
-                color: var(--text-dim);
-              "
-            >
-              no history yet — start converting!
-            </p>
+            <p style="font-size:13px;color:var(--text3);">No history yet — start converting!</p>
           </div>
         </div>
       </div>
     </div>
 
     <footer>
-      NUMCONV // NUMBER SYSTEM CONVERTER // FOR IT STUDENTS<br />
-      <span style="color: var(--accent); letter-spacing: 2px"
-        >© 2026 AKIHIRO</span
-      >
-      — ALL RIGHTS RESERVED
+      NumConv — Number System Converter<br>
+      <span>© 2026 AkihiroLabs</span>
     </footer>
 
     <script>
-      // ── STATE ──
-      const inputs = {
-        dec: document.getElementById("inp-dec"),
-        bin: document.getElementById("inp-bin"),
-        hex: document.getElementById("inp-hex"),
-        oct: document.getElementById("inp-oct"),
-      };
-      const errors = {
-        dec: document.getElementById("err-dec"),
-        bin: document.getElementById("err-bin"),
-        hex: document.getElementById("err-hex"),
-        oct: document.getElementById("err-oct"),
-      };
-      const cards = {
-        dec: document.getElementById("card-dec"),
-        bin: document.getElementById("card-bin"),
-        hex: document.getElementById("card-hex"),
-        oct: document.getElementById("card-oct"),
-      };
+      const inputs = { dec: document.getElementById('inp-dec'), bin: document.getElementById('inp-bin'), hex: document.getElementById('inp-hex'), oct: document.getElementById('inp-oct') };
+      const errors = { dec: document.getElementById('err-dec'), bin: document.getElementById('err-bin'), hex: document.getElementById('err-hex'), oct: document.getElementById('err-oct') };
+      const cards = { dec: document.getElementById('card-dec'), bin: document.getElementById('card-bin'), hex: document.getElementById('card-hex'), oct: document.getElementById('card-oct') };
       const radixes = { dec: 10, bin: 2, hex: 16, oct: 8 };
-      const patterns = {
-        dec: /^-?\d*$/,
-        bin: /^[01]*$/,
-        hex: /^[0-9a-fA-F]*$/,
-        oct: /^[0-7]*$/,
-      };
-      const labels = {
-        dec: "Decimal",
-        bin: "Binary",
-        hex: "Hexadecimal",
-        oct: "Octal",
-      };
-      let updating = false;
-      let history = [];
-      let quizState = {
-        correct: 0,
-        wrong: 0,
-        streak: 0,
-        answered: false,
-        answer: 0,
-      };
+      const patterns = { dec: /^-?\d*$/, bin: /^[01]*$/, hex: /^[0-9a-fA-F]*$/, oct: /^[0-7]*$/ };
+      const labels = { dec: 'Decimal', bin: 'Binary', hex: 'Hexadecimal', oct: 'Octal' };
+      let updating = false, history = [];
+      let quizState = { correct: 0, wrong: 0, streak: 0, answered: false, answer: 0 };
 
-      // ── PAGES ──
       function showPage(id) {
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
-        document
-          .querySelectorAll(".nav-tab")
-          .forEach((t) => t.classList.remove("active"));
-        document.getElementById("page-" + id).classList.add("active");
-        event.target.classList.add("active");
-        if (id === "reference") buildRefTable();
-        if (id === "ascii") buildAscii();
-        if (id === "quiz") newQuiz();
-        if (id === "history") renderHistory();
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('page-' + id).classList.add('active');
+        event.target.classList.add('active');
+        if (id === 'reference') buildRefTable();
+        if (id === 'ascii') buildAscii();
+        if (id === 'quiz') newQuiz();
+        if (id === 'history') renderHistory();
       }
 
-      // ── CONVERTER ──
       function setActive(id) {
-        Object.keys(cards).forEach((k) => {
-          cards[k].classList.remove("active");
-          errors[k].textContent = "";
-        });
-        if (id) cards[id].classList.add("active");
+        Object.keys(cards).forEach(k => { cards[k].classList.remove('active'); errors[k].textContent = ''; });
+        if (id) cards[id].classList.add('active');
       }
 
       function convert(src) {
         if (updating) return;
         updating = true;
         const raw = inputs[src].value.trim();
-        Object.keys(errors).forEach((k) => (errors[k].textContent = ""));
-
-        if (!raw || raw === "-") {
-          Object.keys(inputs).forEach((k) => {
-            if (k !== src) inputs[k].value = "";
-          });
-          renderBits(null);
-          renderSteps(null);
-          updating = false;
-          return;
+        Object.keys(errors).forEach(k => errors[k].textContent = '');
+        if (!raw || raw === '-') {
+          Object.keys(inputs).forEach(k => { if (k !== src) inputs[k].value = ''; });
+          renderBits(null); renderSteps(null); updating = false; return;
         }
-
         if (!patterns[src].test(raw)) {
-          errors[src].textContent =
-            "✗ invalid " + labels[src].toLowerCase() + " character";
-          updating = false;
-          return;
+          errors[src].textContent = 'Invalid ' + labels[src].toLowerCase() + ' character';
+          updating = false; return;
         }
-
         const dec = parseInt(raw, radixes[src]);
-        if (isNaN(dec)) {
-          errors[src].textContent = "✗ invalid number";
-          updating = false;
-          return;
-        }
-
-        Object.keys(inputs).forEach((k) => {
-          if (k !== src)
-            inputs[k].value = dec.toString(radixes[k]).toUpperCase();
-        });
-
-        renderBits(dec);
-        renderSteps(dec, src);
-        addHistory(dec);
-        updating = false;
+        if (isNaN(dec)) { errors[src].textContent = 'Invalid number'; updating = false; return; }
+        Object.keys(inputs).forEach(k => { if (k !== src) inputs[k].value = dec.toString(radixes[k]).toUpperCase(); });
+        renderBits(dec); renderSteps(dec, src); addHistory(dec); updating = false;
       }
 
       function renderBits(dec) {
-        const grid = document.getElementById("bit-grid");
+        const grid = document.getElementById('bit-grid');
         if (dec === null || isNaN(dec) || dec < 0) {
-          grid.innerHTML =
-            '<span style="color:var(--text-dim);font-family:var(--mono);font-size:13px;">enter a number above...</span>';
+          grid.innerHTML = '<span style="color:var(--text3);font-family:var(--mono);font-size:13px;">Enter a number above to see its bits</span>';
           return;
         }
-        const bits = (dec === 0 ? "0" : dec.toString(2)).padStart(
-          Math.max(dec.toString(2).length, 8),
-          "0",
-        );
-        grid.innerHTML = "";
-
-        // group into nibbles
-        const padded = bits.padStart(Math.ceil(bits.length / 4) * 4, "0");
+        const bits = (dec === 0 ? '0' : dec.toString(2)).padStart(Math.max(dec.toString(2).length, 8), '0');
+        grid.innerHTML = '';
+        const padded = bits.padStart(Math.ceil(bits.length / 4) * 4, '0');
         for (let g = 0; g < padded.length; g += 4) {
-          const grp = document.createElement("div");
-          grp.className = "bit-group";
+          const grp = document.createElement('div');
+          grp.className = 'bit-group';
           for (let i = g; i < g + 4; i++) {
             const pos = padded.length - 1 - i;
             const b = padded[i];
-            grp.innerHTML += `<div class="bit-cell"><div class="bit-box ${b === "1" ? "one" : "zero"}">${b}</div><div class="bit-pos">2<sup>${pos}</sup></div></div>`;
+            grp.innerHTML += `<div class="bit-cell"><div class="bit-box ${b === '1' ? 'one' : 'zero'}">${b}</div><div class="bit-pos">2<sup>${pos}</sup></div></div>`;
           }
           grid.appendChild(grp);
         }
       }
 
       function renderSteps(dec, src) {
-        const el = document.getElementById("steps-content");
-        if (dec === null) {
-          el.innerHTML = "enter a number to see steps...";
-          return;
-        }
-
-        let html = "";
-        // dec to bin
+        const el = document.getElementById('steps-content');
+        if (dec === null) { el.innerHTML = 'Enter a number to see the conversion steps'; return; }
+        let html = '';
         if (dec === 0) {
-          html += `<span style="color:var(--accent);">DEC → BIN:</span> 0 = <span style="color:var(--accent2);">0000 0000</span><br>`;
+          html += `<span style="color:var(--primary);">Dec → Bin:</span> 0 = <span style="color:var(--green);">0000 0000</span><br>`;
         } else {
-          let n = dec,
-            steps = [],
-            rem = [];
+          let n = dec, steps = [], rem = [];
           while (n > 0) {
             rem.push(n % 2);
-            steps.push(
-              `${n} ÷ 2 = ${Math.floor(n / 2)} remainder <span style="color:var(--accent2);">${n % 2}</span>`,
-            );
+            steps.push(`${n} ÷ 2 = ${Math.floor(n / 2)} remainder <span style="color:var(--green);">${n % 2}</span>`);
             n = Math.floor(n / 2);
           }
-          html +=
-            `<span style="color:var(--accent);">DEC → BIN (divide by 2):</span><br>` +
-            steps.map((s) => `&nbsp;&nbsp;${s}`).join("<br>") +
-            `<br>&nbsp;&nbsp;Read remainders bottom-up: <span style="color:var(--accent2);">${rem.reverse().join("")}</span><br><br>`;
+          html += `<span style="color:var(--primary);">Dec → Bin (divide by 2):</span><br>` +
+            steps.map(s => `&nbsp;&nbsp;${s}`).join('<br>') +
+            `<br>&nbsp;&nbsp;Read remainders bottom-up: <span style="color:var(--green);">${rem.reverse().join('')}</span><br><br>`;
         }
-
-        // dec to hex
         const hexStr = dec.toString(16).toUpperCase();
-        html += `<span style="color:var(--accent);">DEC → HEX:</span> ${dec} = ${Math.floor(dec / 16)}×16 + ${dec % 16} → <span style="color:var(--accent2);">${hexStr}</span><br><br>`;
-
-        // dec to oct
+        html += `<span style="color:var(--primary);">Dec → Hex:</span> ${dec} = ${Math.floor(dec / 16)}×16 + ${dec % 16} → <span style="color:var(--green);">${hexStr}</span><br><br>`;
         const octStr = dec.toString(8);
-        html += `<span style="color:var(--accent);">DEC → OCT:</span> ${dec} in base 8 = <span style="color:var(--accent2);">${octStr}</span>`;
-
+        html += `<span style="color:var(--primary);">Dec → Oct:</span> ${dec} in base 8 = <span style="color:var(--green);">${octStr}</span>`;
         el.innerHTML = html;
       }
 
       function addHistory(dec) {
         if (isNaN(dec)) return;
-        history = [
-          {
-            dec,
-            bin: dec.toString(2),
-            oct: dec.toString(8),
-            hex: dec.toString(16).toUpperCase(),
-            time: new Date().toLocaleTimeString(),
-          },
-          ...history.filter((h) => h.dec !== dec),
-        ].slice(0, 30);
+        history = [{ dec, bin: dec.toString(2), oct: dec.toString(8), hex: dec.toString(16).toUpperCase(), time: new Date().toLocaleTimeString() },
+          ...history.filter(h => h.dec !== dec)].slice(0, 30);
       }
 
       function renderHistory() {
-        const el = document.getElementById("hist-list");
-        if (!history.length) {
-          el.innerHTML =
-            '<p style="font-family:var(--mono);font-size:12px;color:var(--text-dim);">no history yet — start converting!</p>';
-          return;
-        }
-        el.innerHTML = history
-          .map(
-            (h) =>
-              `<div class="history-row" onclick="loadDec(${h.dec})">
-      <span class="history-dec">${h.dec}</span>
-      <span class="history-rest">BIN: ${h.bin} &nbsp;|&nbsp; OCT: ${h.oct} &nbsp;|&nbsp; HEX: ${h.hex}</span>
-      <span class="history-time">${h.time}</span>
-    </div>`,
-          )
-          .join("");
+        const el = document.getElementById('hist-list');
+        if (!history.length) { el.innerHTML = '<p style="font-size:13px;color:var(--text3);">No history yet — start converting!</p>'; return; }
+        el.innerHTML = history.map(h =>
+          `<div class="history-row" onclick="loadDec(${h.dec})">
+            <span class="history-dec">${h.dec}</span>
+            <span class="history-rest">Bin: ${h.bin} · Oct: ${h.oct} · Hex: ${h.hex}</span>
+            <span class="history-time">${h.time}</span>
+          </div>`).join('');
       }
 
       function loadDec(n) {
-        inputs.dec.value = n;
-        setActive("dec");
-        convert("dec");
-        showPageDirect("converter");
+        inputs.dec.value = n; setActive('dec'); convert('dec'); showPageDirect('converter');
       }
 
       function showPageDirect(id) {
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
-        document
-          .querySelectorAll(".nav-tab")
-          .forEach((t) => t.classList.remove("active"));
-        document.getElementById("page-" + id).classList.add("active");
-        document.querySelectorAll(".nav-tab")[0].classList.add("active");
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('page-' + id).classList.add('active');
+        document.querySelectorAll('.nav-tab')[0].classList.add('active');
       }
 
       function clearAll() {
-        Object.keys(inputs).forEach((k) => {
-          inputs[k].value = "";
-          errors[k].textContent = "";
-        });
-        setActive(null);
-        renderBits(null);
-        renderSteps(null);
+        Object.keys(inputs).forEach(k => { inputs[k].value = ''; errors[k].textContent = ''; });
+        setActive(null); renderBits(null); renderSteps(null);
       }
 
-      function randomNum() {
-        const n = Math.floor(Math.random() * 256);
-        inputs.dec.value = n;
-        setActive("dec");
-        convert("dec");
-      }
-
-      function loadExample(n) {
-        inputs.dec.value = n;
-        setActive("dec");
-        convert("dec");
-      }
+      function randomNum() { const n = Math.floor(Math.random() * 256); inputs.dec.value = n; setActive('dec'); convert('dec'); }
+      function loadExample(n) { inputs.dec.value = n; setActive('dec'); convert('dec'); }
 
       function copyVal(id) {
-        const v = inputs[id].value;
-        if (!v) return;
+        const v = inputs[id].value; if (!v) return;
         navigator.clipboard.writeText(v).then(() => {
           const btn = document.querySelector(`#card-${id} .base-copy`);
           const orig = btn.textContent;
-          btn.textContent = "[ COPIED! ]";
-          btn.style.color = "var(--accent2)";
-          setTimeout(() => {
-            btn.textContent = orig;
-            btn.style.color = "";
-          }, 1200);
+          btn.textContent = 'Copied!'; btn.style.color = 'var(--green)';
+          setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1200);
         });
       }
 
       function copyAll() {
-        const lines = Object.keys(inputs)
-          .map((k) => `${labels[k]}: ${inputs[k].value || "—"}`)
-          .join("\n");
+        const lines = Object.keys(inputs).map(k => `${labels[k]}: ${inputs[k].value || '—'}`).join('\n');
         navigator.clipboard.writeText(lines);
       }
 
-      Object.keys(inputs).forEach((id) => {
-        inputs[id].addEventListener("input", () => {
-          setActive(id);
-          convert(id);
-        });
-        inputs[id].addEventListener("focus", () => setActive(id));
+      Object.keys(inputs).forEach(id => {
+        inputs[id].addEventListener('input', () => { setActive(id); convert(id); });
+        inputs[id].addEventListener('focus', () => setActive(id));
       });
 
-      // ── REFERENCE TABLE ──
       let refData = [];
       function buildRefTable() {
-        if (refData.length) {
-          filterRef();
-          return;
-        }
+        if (refData.length) { filterRef(); return; }
         refData = Array.from({ length: 256 }, (_, i) => ({
-          dec: i,
-          bin: i.toString(2).padStart(8, "0"),
-          oct: i.toString(8),
-          hex: i.toString(16).toUpperCase(),
-          pow: (i & (i - 1)) === 0 && i > 0,
+          dec: i, bin: i.toString(2).padStart(8, '0'),
+          oct: i.toString(8), hex: i.toString(16).toUpperCase(),
+          pow: (i & (i - 1)) === 0 && i > 0
         }));
         filterRef();
       }
 
       function filterRef() {
-        const q = document.getElementById("ref-search").value.trim();
-        const filtered = q
-          ? refData.filter(
-              (r) =>
-                r.dec.toString().includes(q) ||
-                r.hex.includes(q.toUpperCase()) ||
-                r.bin.includes(q),
-            )
-          : refData;
-        document.getElementById("ref-count").textContent =
-          `${filtered.length} rows`;
-        const tbody = document.getElementById("ref-tbody");
-        tbody.innerHTML = filtered
-          .map(
-            (r) =>
-              `<tr class="${r.pow ? "hl" : ""}"><td>${r.dec}</td><td>${r.bin}</td><td>${r.oct}</td><td>${r.hex}</td><td>${r.pow ? "✓ 2^" + Math.log2(r.dec) : ""}</td></tr>`,
-          )
-          .join("");
+        const q = document.getElementById('ref-search').value.trim();
+        const filtered = q ? refData.filter(r => r.dec.toString().includes(q) || r.hex.includes(q.toUpperCase()) || r.bin.includes(q)) : refData;
+        document.getElementById('ref-count').textContent = `${filtered.length} rows`;
+        document.getElementById('ref-tbody').innerHTML = filtered.map(r =>
+          `<tr class="${r.pow ? 'hl' : ''}"><td>${r.dec}</td><td>${r.bin}</td><td>${r.oct}</td><td>${r.hex}</td><td>${r.pow ? '✓ 2^' + Math.log2(r.dec) : ''}</td></tr>`
+        ).join('');
       }
 
-      // ── ASCII TABLE ──
       function buildAscii() {
-        const grid = document.getElementById("ascii-grid");
+        const grid = document.getElementById('ascii-grid');
         if (grid.innerHTML) return;
         const printable = [];
         for (let i = 32; i < 127; i++) printable.push(i);
-        grid.innerHTML = printable
-          .map((c) => {
-            const ch = c === 32 ? "SPC" : String.fromCharCode(c);
-            return `<div class="ascii-cell" onclick="loadDec(${c})">
-      <div class="ascii-char">${ch}</div>
-      <div class="ascii-vals">DEC: ${c}<br>HEX: ${c.toString(16).toUpperCase()}<br>BIN: ${c.toString(2).padStart(8, "0")}</div>
-    </div>`;
-          })
-          .join("");
+        grid.innerHTML = printable.map(c => {
+          const ch = c === 32 ? 'SPC' : String.fromCharCode(c);
+          return `<div class="ascii-cell" onclick="loadDec(${c})">
+            <div class="ascii-char">${ch}</div>
+            <div class="ascii-vals">Dec: ${c}<br>Hex: ${c.toString(16).toUpperCase()}<br>Bin: ${c.toString(2).padStart(8, '0')}</div>
+          </div>`;
+        }).join('');
       }
 
-      // ── QUIZ ──
       const quizTypes = [
-        {
-          q: (n) => `Convert ${n} (decimal) to BINARY`,
-          hint: "base 10 → base 2",
-          src: "dec",
-          tgt: "bin",
-        },
-        {
-          q: (n) => `Convert ${n.toString(2)} (binary) to DECIMAL`,
-          hint: "base 2 → base 10",
-          src: "bin",
-          tgt: "dec",
-        },
-        {
-          q: (n) => `Convert ${n} (decimal) to HEXADECIMAL`,
-          hint: "base 10 → base 16",
-          src: "dec",
-          tgt: "hex",
-        },
-        {
-          q: (n) => `Convert ${n.toString(16).toUpperCase()} (hex) to DECIMAL`,
-          hint: "base 16 → base 10",
-          src: "hex",
-          tgt: "dec",
-        },
-        {
-          q: (n) => `Convert ${n} (decimal) to OCTAL`,
-          hint: "base 10 → base 8",
-          src: "dec",
-          tgt: "oct",
-        },
-        {
-          q: (n) => `Convert ${n.toString(8)} (octal) to DECIMAL`,
-          hint: "base 8 → base 10",
-          src: "oct",
-          tgt: "dec",
-        },
+        { q: n => `Convert ${n} (decimal) to binary`, hint: 'Base 10 → Base 2', src: 'dec', tgt: 'bin' },
+        { q: n => `Convert ${n.toString(2)} (binary) to decimal`, hint: 'Base 2 → Base 10', src: 'bin', tgt: 'dec' },
+        { q: n => `Convert ${n} (decimal) to hexadecimal`, hint: 'Base 10 → Base 16', src: 'dec', tgt: 'hex' },
+        { q: n => `Convert ${n.toString(16).toUpperCase()} (hex) to decimal`, hint: 'Base 16 → Base 10', src: 'hex', tgt: 'dec' },
+        { q: n => `Convert ${n} (decimal) to octal`, hint: 'Base 10 → Base 8', src: 'dec', tgt: 'oct' },
+        { q: n => `Convert ${n.toString(8)} (octal) to decimal`, hint: 'Base 8 → Base 10', src: 'oct', tgt: 'dec' },
       ];
 
       function newQuiz() {
-        quizState.correct = 0;
-        quizState.wrong = 0;
-        quizState.streak = 0;
-        updateScoreUI();
-        nextQuiz();
+        quizState.correct = 0; quizState.wrong = 0; quizState.streak = 0;
+        updateScoreUI(); nextQuiz();
       }
 
       function nextQuiz() {
         quizState.answered = false;
-        document.getElementById("q-next").style.display = "none";
-        document.getElementById("q-feedback").textContent = "";
-
+        document.getElementById('q-next').style.display = 'none';
+        document.getElementById('q-feedback').textContent = '';
         const type = quizTypes[Math.floor(Math.random() * quizTypes.length)];
         const n = Math.floor(Math.random() * 64) + 1;
-        quizState.answer = n;
-        quizState.type = type;
-
-        const display =
-          type.src === "dec"
-            ? n
-            : type.src === "bin"
-              ? n.toString(2)
-              : type.src === "hex"
-                ? n.toString(16).toUpperCase()
-                : n.toString(8);
-
-        document.getElementById("q-question").textContent = type.q(n);
-        document.getElementById("q-number").textContent = display;
-        document.getElementById("q-hint").textContent = "// " + type.hint;
-
-        const correct =
-          type.tgt === "dec"
-            ? n.toString()
-            : type.tgt === "bin"
-              ? n.toString(2)
-              : type.tgt === "hex"
-                ? n.toString(16).toUpperCase()
-                : n.toString(8);
-
-        // generate wrong answers
+        quizState.answer = n; quizState.type = type;
+        const display = type.src === 'dec' ? n : type.src === 'bin' ? n.toString(2) : type.src === 'hex' ? n.toString(16).toUpperCase() : n.toString(8);
+        document.getElementById('q-question').textContent = type.q(n);
+        document.getElementById('q-number').textContent = display;
+        document.getElementById('q-hint').textContent = type.hint;
+        const correct = type.tgt === 'dec' ? n.toString() : type.tgt === 'bin' ? n.toString(2) : type.tgt === 'hex' ? n.toString(16).toUpperCase() : n.toString(8);
         const wrongs = new Set();
         while (wrongs.size < 3) {
-          const fake =
-            n +
-            (Math.random() > 0.5 ? 1 : -1) *
-              (Math.floor(Math.random() * 10) + 1);
+          const fake = n + (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 10) + 1);
           if (fake > 0 && fake !== n) {
-            const fakeStr =
-              type.tgt === "dec"
-                ? fake.toString()
-                : type.tgt === "bin"
-                  ? fake.toString(2)
-                  : type.tgt === "hex"
-                    ? fake.toString(16).toUpperCase()
-                    : fake.toString(8);
+            const fakeStr = type.tgt === 'dec' ? fake.toString() : type.tgt === 'bin' ? fake.toString(2) : type.tgt === 'hex' ? fake.toString(16).toUpperCase() : fake.toString(8);
             if (fakeStr !== correct) wrongs.add(fakeStr);
           }
         }
-
         const opts = [correct, ...[...wrongs]].sort(() => Math.random() - 0.5);
-        const container = document.getElementById("q-options");
-        container.innerHTML = opts
-          .map(
-            (o) =>
-              `<button class="quiz-opt" onclick="answerQuiz('${o}','${correct}')">${o}</button>`,
-          )
-          .join("");
+        document.getElementById('q-options').innerHTML = opts.map(o =>
+          `<button class="quiz-opt" onclick="answerQuiz('${o}','${correct}')">${o}</button>`
+        ).join('');
       }
 
       function answerQuiz(chosen, correct) {
         if (quizState.answered) return;
         quizState.answered = true;
-
-        const opts = document.querySelectorAll(".quiz-opt");
-        opts.forEach((o) => {
+        document.querySelectorAll('.quiz-opt').forEach(o => {
           o.disabled = true;
-          if (o.textContent === correct) o.classList.add("correct");
-          if (o.textContent === chosen && chosen !== correct)
-            o.classList.add("wrong");
+          if (o.textContent === correct) o.classList.add('correct');
+          if (o.textContent === chosen && chosen !== correct) o.classList.add('wrong');
         });
-
-        const fb = document.getElementById("q-feedback");
+        const fb = document.getElementById('q-feedback');
         if (chosen === correct) {
-          quizState.correct++;
-          quizState.streak++;
-          fb.style.color = "var(--accent2)";
-          fb.textContent = `✓ CORRECT! streak: ${quizState.streak}`;
+          quizState.correct++; quizState.streak++;
+          fb.style.color = 'var(--green)';
+          fb.textContent = `Correct! Streak: ${quizState.streak}`;
         } else {
-          quizState.wrong++;
-          quizState.streak = 0;
-          fb.style.color = "var(--accent3)";
-          fb.textContent = `✗ wrong — answer was ${correct}`;
+          quizState.wrong++; quizState.streak = 0;
+          fb.style.color = 'var(--red)';
+          fb.textContent = `Wrong — answer was ${correct}`;
         }
-
         updateScoreUI();
-        document.getElementById("q-next").style.display = "block";
+        document.getElementById('q-next').style.display = 'block';
       }
 
       function updateScoreUI() {
-        document.getElementById("q-correct").textContent = quizState.correct;
-        document.getElementById("q-wrong").textContent = quizState.wrong;
-        document.getElementById("q-streak").textContent = quizState.streak;
+        document.getElementById('q-correct').textContent = quizState.correct;
+        document.getElementById('q-wrong').textContent = quizState.wrong;
+        document.getElementById('q-streak').textContent = quizState.streak;
       }
     </script>
   </body>
