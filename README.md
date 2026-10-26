@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.0-1E3A8A" alt="version 1.1.0">
+  <img src="https://img.shields.io/badge/version-1.2.0-1E3A8A" alt="version 1.2.0">
   <img src="https://img.shields.io/badge/vanilla-JavaScript-00A8CC" alt="Vanilla JS">
   <img src="https://img.shields.io/badge/no-dependencies-1E3A8A" alt="No dependencies">
 </p>
@@ -34,7 +34,7 @@ No build step is needed.
 1. Download or clone this repository.
 2. Open `index.html` in any modern browser.
 
-Live: **https://akihirozayar.github.io/numconv/**
+Live: **https://convert.akihirolabs.com/**
 
 ## 📁 Project structure
 

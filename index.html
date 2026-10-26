@@ -6,6 +6,11 @@
     <title>NumConv — Number System Converter</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="NumConv">
     <meta name="author" content="AkihiroLabs" />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
@@ -173,10 +178,12 @@
 
     <footer>
       NumConv — Number System Converter<br>
-      <span>© 2026 AkihiroLabs</span>
+      <span>© 2026 AkihiroLabs</span><br>
+      <button class="btn install-btn" data-install hidden>⬇ Install app</button>
     </footer>
 
     <script src="js/version.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/pwa.js"></script>
   </body>
 </html>
