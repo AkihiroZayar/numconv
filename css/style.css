@@ -304,3 +304,7 @@
         font-size: 13px; color: var(--text3);
       }
       footer span { color: var(--primary); font-weight: 500; }
+
+/* Install button (shown only when the browser offers install) */
+.install-btn[hidden] { display: none; }
+.install-btn { margin-top: 12px; }
